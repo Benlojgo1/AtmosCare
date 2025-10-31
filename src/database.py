@@ -1,0 +1,1 @@
+# Python module for database connection, closing, and cursor management
