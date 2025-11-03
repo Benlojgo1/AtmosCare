@@ -16,7 +16,7 @@ The project specifically addresses how environmental data can be used to mitigat
 | **Database Language** | SQL | Used for all CRUD and analytical operations. |
 | **API / Data Source** | **WeatherAPI.com** | Primary source for real-time weather, temperature, humidity, and air quality data. JSON/XML API |
 | **Back-End / Integration** | Python (with a database connector like `psycopg2` or `sqlite3`) | Handles data ingestion, cleaning, and running the analytical queries. |
-| **Front-End / UI** | Streamlit or Plain HTML/Python GUI or React | Simple interface for running queries and demonstrating CRUD operations. |
+| **Front-End / UI** | React | Simple interface for running queries and demonstrating CRUD operations. |
 
 ## 📂 Database Schema (Relational Model)
 
@@ -67,8 +67,8 @@ These parameterized queries are the core of our barrier-breaking analysis, acces
 
 | Area | Responsibility | Suggested Team Member(s) |
 | :--- | :--- | :--- |
-| **Data Modeling & SQL** | Finalize the relational schema, write the `CREATE TABLE` scripts, and implement all 5 analytical SQL queries. | (who) |
-| **API & Data Ingestion** | Manage the **WeatherAPI.com** integration, write the Python scripts to fetch data, and ensure data is cleaned and loaded into the database (the **C**reate operation). | (who) |
-| **CRUD Operations** | Implement the full Create, Read, Update, and Delete (**CRUD**) logic in the Python back-end for the **LOCATION** and **WEATHER\_RECORD** entities. | (who) |
-| **Front-End (UI)** | Design and build the Streamlit/HTML interface, connecting the user input forms to the analytical queries and displaying results clearly. | (who) |
-| **Documentation & Presentation** | Lead the creation of the final report, prepare the slides, and manage the weekly video updates. | (who) |
+| **Data Modeling & SQL** | Finalize the relational schema, write the `CREATE TABLE` scripts, and implement all 5 analytical SQL queries. | Everyone |
+| **API & Data Ingestion** | Manage the **WeatherAPI.com** integration, write the Python scripts to fetch data, and ensure data is cleaned and loaded into the database (the **C**reate operation). | Alvaro |
+| **CRUD Operations** | Implement the full Create, Read, Update, and Delete (**CRUD**) logic in the Python back-end for the **LOCATION** and **WEATHER\_RECORD** entities. | Ben |
+| **Front-End (UI)** | Design and build the Streamlit/HTML interface, connecting the user input forms to the analytical queries and displaying results clearly. | Eric |
+| **Documentation & Presentation** | Lead the creation of the final report, prepare the slides, and manage the weekly video updates. | Everyone |
