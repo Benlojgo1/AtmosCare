@@ -1,0 +1,1 @@
+#Pydantic models (Location, WeatherRecord, etc.)

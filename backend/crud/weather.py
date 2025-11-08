@@ -1,0 +1,1 @@
+#CRUD + ingest for WEATHER_RECORD

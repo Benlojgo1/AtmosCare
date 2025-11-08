@@ -1,1 +1,0 @@
-# Python module containing functions for all 5 analytical queries and CRUD functions

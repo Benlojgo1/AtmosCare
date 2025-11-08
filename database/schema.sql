@@ -1,0 +1,1 @@
+--CREATE TABLE statements (LOCATION, WEATHER_RECORD...)
