@@ -1,31 +1,70 @@
-## Ignore Visual Studio SSDT sqlproj specific temporary files, build results, etc
-## 
-##
-## Get latest from https://github.com/github/gitignore/blob/master/SSDT-sqlproj.gitignore
-# Build output
-bin/
-obj/
+# The actual database files and logs should never be committed.
+# Only commit SQL DDL/DML scripts (e.g., schema.sql, initial_data.sql).
+data/
+pg_log/
+pg_tblspc/
+postgresql.conf
+pg_hba.conf
 
-# DACPAC files
-*.dacpac
+# Ignore common credentials/environment files
+.env
+.local_settings.py
 
-# Publish profiles (optional, if environment-specific)
-*.publish.xml
+# Dependency directory
+/node_modules
 
-# SQL Server debug files
-*.dbmdl
-*.sqlcmdvars
+# Build/Dist directories
+/build
+/dist
+/out
+/tmp
+/coverage
 
-# Visual Studio settings
-.vs/
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# User-specific files
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
+# OS/Editor generated files
+.DS_Store
+.vscode
+.idea
 
-# Backup files
-*.bak
-*.log
+# Compiled/minified files
+*.min.js
+*.min.css
 
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environment
+.venv/
+venv/
+env/
+/bin/
+/include/
+/lib/
+/share/
+
+# Installer files
+*.egg-info/
+dist/
+build/
+
+# Jupyter/IPython Notebook files
+.ipynb_checkpoints
+
+# Test and coverage artifacts
+.pytest_cache/
+htmlcov/
+.coverage
