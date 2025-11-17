@@ -1,0 +1,10 @@
+# Primary Application Framework and UI
+streamlit
+
+# Database Connector (PostgreSQL)
+psycopg[binary]
+
+# Data Handling and Configuration
+requests
+python-dotenv
+pandas

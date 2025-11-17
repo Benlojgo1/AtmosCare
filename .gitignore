@@ -1,70 +1,64 @@
-# The actual database files and logs should never be committed.
-# Only commit SQL DDL/DML scripts (e.g., schema.sql, initial_data.sql).
+# --------------------
+# 1. ENVIRONMENT AND PYTHON
+# --------------------
+# Python virtual environments (venv, .venv, etc.)
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.so
+
+# Installer files
+*.egg-info/
+dist/
+build/
+htmlcov/
+.coverage
+
+# Jupyter/IPython Notebook artifacts
+.ipynb_checkpoints
+
+# Streamlit specific cache (important!)
+.streamlit/
+
+# --------------------
+# 2. DATABASE AND SECRETS
+# --------------------
+# Environment variables (ALWAYS IGNORE)
+.env
+*.key
+*.pem
+.local_settings.py
+
+# SQLite files (if used for local testing)
+*.sqlite3
+db.sqlite3
+
+# PostgreSQL files (actual server data, configuration files)
 data/
 pg_log/
 pg_tblspc/
 postgresql.conf
 pg_hba.conf
 
-# Ignore common credentials/environment files
-.env
-.local_settings.py
-
-# Dependency directory
+# --------------------
+# 3. NODE.JS / REACT (If your frontend is React)
+# --------------------
 /node_modules
-
-# Build/Dist directories
 /build
-/dist
-/out
-/tmp
-/coverage
-
-# Logs
 npm-debug.log*
-yarn-debug.log*
 yarn-error.log*
 
-# OS/Editor generated files
+# --------------------
+# 4. OS AND IDE
+# --------------------
+# macOS
 .DS_Store
-.vscode
-.idea
 
-# Compiled/minified files
-*.min.js
-*.min.css
+# Windows thumbnail cache
+Thumbs.db
 
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-
-# Virtual environment
-.venv/
-venv/
-env/
-/bin/
-/include/
-/lib/
-/share/
-
-# Installer files
-*.egg-info/
-dist/
-build/
-
-# Jupyter/IPython Notebook files
-.ipynb_checkpoints
-
-# Test and coverage artifacts
-.pytest_cache/
-htmlcov/
-.coverage
+# Visual Studio Code / IDE settings
+.vscode/
+.idea/
