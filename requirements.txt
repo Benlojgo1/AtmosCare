@@ -1,3 +1,4 @@
+# You will run this: py -m pip install -r requirements.txt
 # Primary Application Framework and UI
 streamlit
 
@@ -8,3 +9,8 @@ psycopg[binary]
 requests
 python-dotenv
 pandas
+
+fastapi
+uvicorn
+databases
+asyncpg

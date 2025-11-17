@@ -1,9 +1,5 @@
-# src/database.py
-
 import psycopg
 import os
-# Note: In a real application, you would ensure load_dotenv() is called 
-# in the main application file (e.g., app.py) before this function is called.
 
 def get_db_connection():
     """
@@ -28,9 +24,6 @@ def get_db_connection():
             user=db_user,
             password=db_password
         )
-        # Ensure the connection is set for automatic commits if needed, 
-        # though explicit transaction management is generally better.
-        # conn.autocommit = True 
         return conn
     
     except psycopg.Error as e:

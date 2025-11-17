@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 -- Insert Sample Locations (Static Data)
 INSERT INTO LOCATION (zip_code, location_name, population, vulnerability_index) VALUES
 ('90210', 'Beverly Hills', 34000, 0.15),
@@ -28,6 +27,3 @@ INSERT INTO RISK_ALERT (zip_code, record_id, risk_id, is_urgent) VALUES
 -- Alert 2: Asthma Risk in 60620
 INSERT INTO RISK_ALERT (zip_code, record_id, risk_id, is_urgent) VALUES
 ('60620', 3, 1, TRUE); -- Assuming record_id 3 corresponds to the 110 AQI
-=======
---Optional sample data
->>>>>>> f43217294404db2beb60366dd78400e793075df8
