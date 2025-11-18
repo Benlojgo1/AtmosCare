@@ -39,7 +39,7 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"FATAL ERROR: Failed to connect to database during startup. {e}")
     
-    yield # Server is now running
+    yield
     
     # SHUTDOWN LOGIC: Disconnect from the database
     await database.disconnect()
@@ -54,14 +54,14 @@ app = FastAPI(
 # --- 3. Enable CORS Middleware ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], # Your frontend URL
+    allow_origins=["http://localhost:5173"], 
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # --- 4. Include Routers (Attach Endpoints) ---
 
-# All routers are now included and active:
+# All three router modules are included and active:
 app.include_router(
     locations_router, 
     prefix="/api", 
@@ -73,7 +73,7 @@ app.include_router(
     tags=["Weather"]
 )
 app.include_router(
-    queries_router, # <-- ADDED: Includes all your analytical queries (high-risk, compare, etc.)
+    queries_router, 
     prefix="/api", 
     tags=["Analysis"]
 )
