@@ -5,28 +5,6 @@ from dotenv import load_dotenv
 import databases
 import os
 
-# --- 1. Load Environment Variables ---
-load_dotenv() 
-
-# --- 2. Construct DATABASE_URL from Components ---
-DB_HOST = os.getenv('DB_HOST', 'localhost')
-DB_PORT = os.getenv('DB_PORT', '5432')
-DB_NAME = os.getenv('DB_NAME', 'atmoscare')
-DB_USER = os.getenv('DB_USER', 'postgres')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'password')
-
-# Check if essential credentials exist; if so, construct the URL
-if DB_USER and DB_PASSWORD and DB_NAME:
-    DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-else:
-    DATABASE_URL = "postgresql://postgres:password@localhost:5432/atmoscare" 
-    
-# --- 3. Initialize Async database connection ---
-database = databases.Database(DATABASE_URL)
-
-# Define the router instance
-router = APIRouter()
-
 # Pydantic model for Location data (Simplified for example)
 class LocationCreate(BaseModel):
     zip_code: str

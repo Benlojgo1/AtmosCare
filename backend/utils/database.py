@@ -32,3 +32,32 @@ def get_db_connection():
         print(f"Failed to connect to PostgreSQL. Check .env variables and ensure the server is running.")
         print(f"Details: {e}")
         return None
+
+    # Code block below was made to test if connection was successful (it was)
+# if __name__ == '__main__':
+#     from dotenv import load_dotenv
+
+#     # 1. Load environment variables (CRITICAL for testing)
+#     load_dotenv() 
+    
+#     print("Attempting to connect to the database...")
+    
+#     conn = get_db_connection()
+    
+#     if conn:
+#         print("SUCCESS: Database connection established!")
+        
+#         try:
+#             # Optional: Execute a simple query to confirm database responsiveness
+#             cursor = conn.cursor()
+#             cursor.execute('SELECT 1 + 1;')
+#             result = cursor.fetchone()
+#             print(f"   Test Query Result: {result}")
+#             cursor.close()
+#         except Exception as e:
+#             print(f" WARNING: Failed to execute simple query: {e}")
+#         finally:
+#             conn.close()
+#             print("   Connection closed gracefully.")
+#     else:
+#         print("FAILURE: Could not connect to the database. Check logs above.")
