@@ -12,7 +12,6 @@ def fetch_current_weather(zip_code, api_key):
         response = requests.get(endpoint)
         response.raise_for_status() # Raise an exception for bad status codes (4xx or 5xx)
         
-        # ... rest of your data processing logic ...
         data = response.json()
         
         weather_data = {
