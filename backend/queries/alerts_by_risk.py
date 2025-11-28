@@ -37,7 +37,6 @@ async def lifespan(app: FastAPI):
 
 
 # --- 2. Create FastAPI Instance with the Lifespan ---
-# You need to remove the existing @app.on_event functions first!
 app = FastAPI(lifespan=lifespan)
 
 # Enable CORS for frontend
