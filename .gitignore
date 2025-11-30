@@ -1,0 +1,54 @@
+# Python virtual environments (venv, .venv, etc.)
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.so
+
+# Installer files
+*.egg-info/
+dist/
+build/
+htmlcov/
+.coverage
+
+# Jupyter/IPython Notebook artifacts
+.ipynb_checkpoints
+
+# Streamlit specific cache (important!)
+.streamlit/
+
+# Environment variables (ALWAYS IGNORE)
+.env
+*.key
+*.pem
+.local_settings.py
+
+# SQLite files (if used for local testing)
+*.sqlite3
+db.sqlite3
+
+# PostgreSQL files (actual server data, configuration files)
+data/
+pg_log/
+pg_tblspc/
+postgresql.conf
+pg_hba.conf
+
+# NODE.JS / REACT 
+/node_modules
+/build
+npm-debug.log*
+yarn-error.log*
+
+
+# macOS
+.DS_Store
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Visual Studio Code / IDE settings
+.vscode/
+.idea/

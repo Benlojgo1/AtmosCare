@@ -1,0 +1,16 @@
+# You will run this: py -m pip install -r requirements.txt
+# Primary Application Framework and UI
+streamlit
+
+# Database Connector (PostgreSQL)
+psycopg[binary]
+
+# Data Handling and Configuration
+requests
+python-dotenv
+pandas
+
+fastapi
+uvicorn
+databases
+asyncpg

@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine 
+    container_name: atmoscare_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      # Map the container port 5432 to the host port 5432 (or your custom port)
+      - "5432:6767"
+    volumes:
+      # Volume 1: Persist the database data
+      - postgres_data:/var/lib/postgresql/data
+      # Volume 2: Copy the initialization script and SQL files into the container
+      # This runs the files automatically when the container starts for the first time
+      - ./sql/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh:ro
+      - ./sql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./sql/02_seed_data.sql:/docker-entrypoint-initdb.d/02_seed_data.sql:ro
+
+# Define the persistent volume
+volumes:
+  postgres_data:
