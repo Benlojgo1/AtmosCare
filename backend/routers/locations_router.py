@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from fastapi import APIRouter, HTTPException
 from typing import List
 from pydantic import BaseModel
@@ -80,7 +79,6 @@ async def create_location(location: LocationCreate):
     try:
         row = await database.fetch_one(insert_query, values=location.dict())
         return LocationRow(**dict(row))
-=======
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -101,14 +99,11 @@ def create_location(payload: LocationCreate, db: Session = Depends(get_db)):
     """
     try:
         loc = locations_crud.create_location(db, payload)
->>>>>>> 277a7ee962c8ce045359e005cefc3a332560ba14
     except Exception as e:
         # If you'd like, catch more specific exceptions (IntegrityError, etc.)
         raise HTTPException(status_code=500, detail="Failed to create location") from e
     return loc
 
-
-<<<<<<< HEAD
 @router.put("/locations/{zip_code}", response_model=LocationRow)
 async def update_location(zip_code: str, location: LocationCreate):
     """
@@ -149,7 +144,7 @@ async def delete_location(zip_code: str):
         raise HTTPException(status_code=400, detail="Failed to delete location")
 
     return {"message": f"Location {zip_code} deleted successfully"}
-=======
+
 @router.get("/", response_model=List[LocationRead])
 def list_locations(db: Session = Depends(get_db)):
     return locations_crud.get_locations(db)
@@ -178,4 +173,3 @@ def delete_location(location_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Location not found")
     # FastAPI will return an empty body with 204
     return None
->>>>>>> 277a7ee962c8ce045359e005cefc3a332560ba14
