@@ -17,7 +17,8 @@ DATABASE_URL = os.getenv(
 # Async database connection
 database = databases.Database(DATABASE_URL)
 
-app = FastAPI(title="AtmosCare - Queries API")
+# --- 2. Create FastAPI Instance with the Lifespan ---
+app = FastAPI(lifespan=lifespan)
 
 # Enable CORS for frontend
 # removed trailing slash from origin and allowed credentials
