@@ -1,47 +1,26 @@
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-from pydantic import BaseModel
-from contextlib import asynccontextmanager
+from pydantic import BaseModel, constr
 import databases
 import os
+import logging
 
-# --- Configuration ---
-# Note: Use os.getenv('DATABASE_URL') to read from your .env file
+logger = logging.getLogger("uvicorn.error")
+
+# PostgreSQL connection string
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/mydb")
+
+# Async database connection
 database = databases.Database(DATABASE_URL)
 
-# --- 1. Define the Lifespan Context Manager ---
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """
-    Handles application startup (connect to DB) and shutdown (disconnect from DB).
-    """
-    print("--- SERVER STARTUP: Connecting to Database ---")
-    
-    # STARTUP LOGIC: Connect to the database
-    try:
-        await database.connect()
-        print("SUCCESS: Database connected.")
-    except Exception as e:
-        print(f"FATAL ERROR: Failed to connect to database. {e}")
-    
-    # Yield control to the application (server is now running)
-    yield
-    
-    # SHUTDOWN LOGIC: Disconnect from the database
-    print("--- SERVER SHUTDOWN: Disconnecting from Database ---")
-    await database.disconnect()
-    print("SUCCESS: Database disconnected.")
+app = FastAPI(title="AtmosCare - Compare ZIPs API")
 
-# --- 2. Create FastAPI Instance with the Lifespan ---
-# This replaces the deprecated @app.on_event handlers.
-app = FastAPI(lifespan=lifespan)
-
-# Enable CORS for frontend
+# Enable CORS for frontend (no trailing slash on origin)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], # Note: Removed trailing slash
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -52,35 +31,41 @@ class CompareZipRow(BaseModel):
     AvgTemp: float
     AvgHumidity: float
 
-# --- 3. Endpoint with Analytical SQL ---
+# Connect/disconnect events
+@app.on_event("startup")
+async def startup():
+    await database.connect()
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
+
+# Endpoint
 @app.get("/api/queries/compare", response_model=List[CompareZipRow])
 async def compare_zips(
-    zip1: str = Query(..., description="First ZIP code"),
-    zip2: str = Query(..., description="Second ZIP code")
+    zip1: constr(strip_whitespace=True, min_length=3, max_length=10) = Query(
+        ..., description="First ZIP code"
+    ),
+    zip2: constr(strip_whitespace=True, min_length=3, max_length=10) = Query(
+        ..., description="Second ZIP code"
+    ),
 ):
-    if not zip1 or not zip2:
-        raise HTTPException(status_code=400, detail="Both zip1 and zip2 are required")
-
-    # This query dynamically calculates the averages from the raw weather data.
-    query = """
-        SELECT
-            zip_code AS "ZipCode",
-            AVG(temperature) AS "AvgTemp",
-            AVG(humidity) AS "AvgHumidity"
-        FROM
-            weather_record
-        WHERE
-            zip_code IN (:zip1, :zip2)
-            -- Use this line for a true analytical 7-day average:
-            -- AND timestamp >= NOW() - INTERVAL '7 days' 
-        GROUP BY
-            zip_code
-        ORDER BY
-            zip_code
     """
-    
-    rows = await database.fetch_all(query=query, values={"zip1": zip1, "zip2": zip2})
-    
-    # Note: databases library returns records, which can be converted to dicts for Pydantic.
-    results = [dict(row) for row in rows] 
+    Compare two ZIP codes and return average temperature and humidity metrics for each.
+    """
+    # Basic validation handled by pydantic types above
+    query = """
+        SELECT "ZipCode", "AvgTemp", "AvgHumidity"
+        FROM "ZipMetrics"
+        WHERE ("ZipCode" = :zip1) OR ("ZipCode" = :zip2)
+        ORDER BY "ZipCode"
+    """
+
+    try:
+        rows = await database.fetch_all(query=query, values={"zip1": zip1, "zip2": zip2})
+    except Exception as e:
+        logger.exception("Database error while fetching compare ZIPs")
+        raise HTTPException(status_code=500, detail="Internal server error") from e
+
+    results = [dict(row) for row in rows]
     return results
