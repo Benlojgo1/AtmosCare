@@ -83,11 +83,11 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from ..schemas import LocationCreate, LocationUpdate, LocationRead  # adjust names if different
+from ..schemas import LocationCreate, LocationUpdate, LocationRead  
 from ..crud import locations as locations_crud
 
 # Assumes backend/db.py defines get_db() -> yields Session
-from ..db import get_db  # <- change if your db dependency has a different name/location
+from ..db import get_db  
 
 router = APIRouter(prefix="/api/locations", tags=["locations"])
 
@@ -100,7 +100,7 @@ def create_location(payload: LocationCreate, db: Session = Depends(get_db)):
     try:
         loc = locations_crud.create_location(db, payload)
     except Exception as e:
-        # If you'd like, catch more specific exceptions (IntegrityError, etc.)
+        
         raise HTTPException(status_code=500, detail="Failed to create location") from e
     return loc
 
