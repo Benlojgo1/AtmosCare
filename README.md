@@ -12,7 +12,7 @@ The project specifically addresses how environmental data can be used to mitigat
 
 | Component | Technology | Role |
 | :--- | :--- | :--- |
-| **Database Model** | Relational (PostgreSQL or SQLite) | Ensures data integrity and supports complex analytical queries. |
+| **Database Model** | Relational (PostgreSQL) | Ensures data integrity and supports complex analytical queries. |
 | **Database Language** | SQL | Used for all CRUD and analytical operations. |
 | **API / Data Source** | **WeatherAPI.com** | Primary source for real-time weather, temperature, humidity, and air quality data. JSON/XML API |
 | **Back-End / Integration** | Python (with a database connector like `psycopg2` or `sqlite3`) | Handles data ingestion, cleaning, and running the analytical queries. |
@@ -47,7 +47,7 @@ These parameterized queries are the core of our barrier-breaking analysis, acces
     cd AtmosCare
     ```
 2.  **Set up the database:**
-    * Install **PostgreSQL** or ensure **SQLite** is available.
+    * Install **PostgreSQL** and ensure it is available.
     * Execute the SQL schema file (e.g., `schema.sql`) to create the tables.
 3.  **Configure API Key:**
     * Obtain an API key from **WeatherAPI.com**.
