@@ -9,25 +9,25 @@ router = APIRouter()
 
 @router.get("/queries/high-risk")
 async def high_risk(aqi: int = Query(100, description="AQI threshold")):
-    # TODO: replace with real query (use backend/queries/high_risk.py)
+
     return {"query": "high-risk", "aqi": aqi, "rows": []}
 
 
 @router.get("/queries/heat-outliers")
 async def heat_outliers(top: int = Query(5, ge=1, le=50, description="Top N zip codes")):
-    # TODO: replace with real query (use backend/queries/heat_ouliers.py)
+
     return {"query": "heat-outliers", "top": top, "rows": []}
 
 
 @router.get("/queries/alerts-by-risk")
 async def alerts_by_risk(riskName: str = Query(..., description="Risk name, e.g. 'Asthma'")):
-    # TODO: replace with real query (use backend/queries/alerts_by_risk.py)
+
     return {"query": "alerts-by-risk", "riskName": riskName, "rows": []}
 
 
 @router.get("/queries/resource-allocation")
 async def resource_allocation():
-    # TODO: replace with real query (use backend/queries/resource_allocation.py)
+
     return {"query": "resource-allocation", "rows": []}
 
 
@@ -36,7 +36,7 @@ async def compare_zips(
     zip1: str = Query(..., description="First ZIP code"),
     zip2: str = Query(..., description="Second ZIP code"),
 ):
-    # TODO: replace with real query (use backend/queries/compare_zips.py)
+
     return {
         "query": "compare",
         "zip1": zip1,
@@ -52,14 +52,12 @@ import inspect
 
 from starlette.concurrency import run_in_threadpool
 
-# I assume you have an async 'database' object in backend/db.py (databases.Database)
-from ..db import database  # <- ensure backend/db.py exports `database` (async databases.Database)
+from ..db import database  
 
 logger = logging.getLogger("uvicorn.error")
 router = APIRouter(prefix="/api/queries", tags=["queries"])
 
 
-# Response models - adjust fields to match your DB schema
 class AlertRow(BaseModel):
     ZipCode: str
     LocationName: str
@@ -85,7 +83,6 @@ class AllocationRow(BaseModel):
     PercentUrgent: float
 
 
-# Alerts by risk (async raw SQL using the shared async database)
 @router.get("/alerts-by-risk", response_model=List[AlertRow])
 async def alerts_by_risk(riskName: constr(strip_whitespace=True, min_length=1) = Query(...)):
     query = """
