@@ -1,84 +1,78 @@
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-from pydantic import BaseModel
-from contextlib import asynccontextmanager
+from pydantic import BaseModel, Field
 import databases
 import os
+import logging
 
-# --- Configuration ---
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/mydb")
+logger = logging.getLogger("uvicorn.error")
+
+# PostgreSQL connection string
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://user:password@localhost:5432/mydb"
+)
+
+# Create async database connection
 database = databases.Database(DATABASE_URL)
 
-# --- 1. Define the Lifespan Context Manager ---
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Handles application startup (connect to DB) and shutdown (disconnect from DB)."""
-    
-    # STARTUP LOGIC: Connect to the database
-    try:
-        await database.connect()
-    except Exception as e:
-        print(f"FATAL ERROR: Failed to connect to database: {e}")
-        # Consider logging or raising a critical error here
-    
-    yield # Server is now running
-    
-    # SHUTDOWN LOGIC: Disconnect from the database
-    await database.disconnect()
+app = FastAPI(title="AtmosCare - High Risk Query API")
 
-# --- 2. Create FastAPI Instance with the Lifespan ---
-app = FastAPI(lifespan=lifespan)
-
-# Enable CORS (Note: Removed trailing slash from allow_origins for clean standard)
+# Enable CORS (NO TRAILING SLASH!)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], 
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Pydantic model for response
+# Response model
 class HighRiskRow(BaseModel):
     ZipCode: str
     LocationName: str
     VulnerabilityIndex: float
     AQI: float
 
-# --- 3. Endpoint with Analytical SQL ---
+# Connect/disconnect events
+@app.on_event("startup")
+async def startup():
+    await database.connect()
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
+
+
 @app.get("/api/queries/high-risk", response_model=List[HighRiskRow])
 async def high_risk_query(
-    aqi: float = Query(..., description="AQI threshold"),
-    # Add a vulnerability threshold parameter for more robust filtering
-    vulnerability_threshold: float = Query(0.50, description="Minimum vulnerability index (0.0 to 1.0)")
+    aqi: float = Query(
+        ...,
+        ge=0,
+        description="AQI threshold (must be >= 0)"
+    )
 ):
-    if aqi < 0:
-        raise HTTPException(status_code=400, detail="AQI must be >= 0")
+    """
+    Returns ZIP codes with AQI values above a specified threshold.
+    """
 
-    # Analytical Query 1: Find locations with high AQI AND high vulnerability
+    # Optional sanity limit for AQI values
+    if aqi > 2000:  # "impossible AQI"
+        raise HTTPException(status_code=400, detail="AQI threshold is unrealistically high.")
+
     query = """
-        SELECT
-            L.zip_code AS "ZipCode",
-            L.location_name AS "LocationName",
-            L.vulnerability_index AS "VulnerabilityIndex",
-            R.air_quality_index AS "AQI"
-        FROM
-            location L
-        JOIN
-            weather_record R ON L.zip_code = R.zip_code
-        WHERE
-            R.air_quality_index > :aqi
-            AND L.vulnerability_index >= :vulnerability_threshold
-            AND R.timestamp = (SELECT MAX(timestamp) FROM weather_record WHERE zip_code = L.zip_code) -- Get latest record
-        ORDER BY
-            R.air_quality_index DESC
+        SELECT "ZipCode", "LocationName", "VulnerabilityIndex", "AQI"
+        FROM "HeatOutliers"
+        WHERE "AQI" > :aqi
+        ORDER BY "AQI" DESC
         LIMIT 100
     """
-    
-    rows = await database.fetch_all(query=query, values={
-        "aqi": aqi, 
-        "vulnerability_threshold": vulnerability_threshold
-    })
-    
-    results = [dict(row) for row in rows]
-    return results
+
+    try:
+        rows = await database.fetch_all(query=query, values={"aqi": aqi})
+    except Exception as e:
+        logger.exception("Database error during high-risk query.")
+        raise HTTPException(status_code=500, detail="Internal server error") from e
+
+    return [dict(row) for row in rows]
