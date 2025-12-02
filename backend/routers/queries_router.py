@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from fastapi import APIRouter, Query
 from typing import List
 
@@ -43,7 +42,6 @@ async def compare_zips(
         "zip2": zip2,
         "rows": [],
     }
-=======
 from typing import List, Dict, Any
 from fastapi import APIRouter, Query, HTTPException
 from pydantic import BaseModel, constr
@@ -154,4 +152,3 @@ async def resource_allocation():
         logger.exception("Database error during resource allocation query")
         raise HTTPException(status_code=500, detail="Internal server error") from e
     return [dict(r) for r in rows]
->>>>>>> 277a7ee962c8ce045359e005cefc3a332560ba14

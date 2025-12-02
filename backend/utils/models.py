@@ -91,5 +91,3 @@ class AllocationRow(BaseModel):
     
     class Config:
         from_attributes = True
-
-# You would add response models for the other analytical queries here as needed.

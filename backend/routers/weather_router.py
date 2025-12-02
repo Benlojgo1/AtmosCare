@@ -1,5 +1,4 @@
 from typing import List
-<<<<<<< HEAD
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -56,7 +55,6 @@ async def list_weather(
 
     rows = await database.fetch_all(query, values={"zip": zip, "limit": limit})
     if not rows:
-        # not a hard error; frontend can show "no data yet for this ZIP"
         return []
 
     return [WeatherRecordRow(**dict(row)) for row in rows]
@@ -73,8 +71,6 @@ async def ingest_weather(body: WeatherIngest):
 
     # 1) Fetch current conditions from external API
     try:
-        # Your api_fetcher should return something like:
-        # { "timestamp": datetime, "temperature": float, "humidity": float, "air_quality_index": int }
         data = await fetch_current_weather(zip_code)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Failed to fetch from WeatherAPI: {e}")
@@ -102,15 +98,15 @@ async def ingest_weather(body: WeatherIngest):
         raise HTTPException(status_code=500, detail="Failed to insert weather record into database")
 
     return WeatherRecordRow(**dict(row))
-=======
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from ..schemas import WeatherCreate, WeatherUpdate, WeatherRead  # adjust these names if needed
+from ..schemas import WeatherCreate, WeatherUpdate, WeatherRead 
 from ..crud import weather as weather_crud
 
-# Assumes backend/db.py defines get_db() -> yields Session
-from ..db import get_db  # <- change if your db dependency has a different name/location
+
+from ..db import get_db 
 
 router = APIRouter(prefix="/api/weather", tags=["weather"])
 
@@ -156,4 +152,3 @@ def delete_weather(weather_id: int, db: Session = Depends(get_db)):
     if not ok:
         raise HTTPException(status_code=404, detail="Weather record not found")
     return None
->>>>>>> 277a7ee962c8ce045359e005cefc3a332560ba14
