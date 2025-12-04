@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -- Disable referential integrity checks temporarily during setup
 SET session_replication_role = replica;
 
@@ -41,4 +42,6 @@ CREATE TABLE IF NOT EXISTS RISK_ALERT (
 
 -- Re-enable referential integrity checks
 SET session_replication_role = DEFAULT;
+=======
 --CREATE TABLE statements (LOCATION, WEATHER_RECORD...)
+>>>>>>> f43217294404db2beb60366dd78400e793075df8

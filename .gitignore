@@ -52,3 +52,25 @@ Thumbs.db
 # Visual Studio Code / IDE settings
 .vscode/
 .idea/
+/frontend/node_modules
+/frontend/node_modules
+frontend/node_modules/.vite/deps/react.js
+frontend/node_modules/.vite/deps/recharts.js
+frontend/node_modules/.vite/deps/package.json
+frontend/node_modules/.vite/deps/react-dom.js
+frontend/node_modules/.vite/deps/react.js.map
+frontend/node_modules/.vite/deps/_metadata.json
+frontend/node_modules/.vite/deps/lucide-react.js
+frontend/node_modules/.vite/deps/recharts.js.map
+frontend/node_modules/.vite/deps/react-dom.js.map
+frontend/node_modules/.vite/deps/chunk-IR323MWG.js
+frontend/node_modules/.vite/deps/chunk-MEA6YV6E.js
+frontend/node_modules/.vite/deps/lucide-react.js.map
+frontend/node_modules/.vite/deps/react-dom_client.js
+frontend/node_modules/.vite/deps/chunk-IR323MWG.js.map
+frontend/node_modules/.vite/deps/chunk-MEA6YV6E.js.map
+frontend/node_modules/.vite/deps/react-dom_client.js.map
+frontend/node_modules/.vite/deps/react_jsx-dev-runtime.js
+frontend/node_modules/.vite/deps/react_jsx-runtime.js.map
+frontend/node_modules/.vite/deps/react_jsx-dev-runtime.js.map
+frontend/node_modules/.vite/deps/react_jsx-runtime.js

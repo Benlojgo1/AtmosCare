@@ -1,15 +1,16 @@
 export type Location = {
-  ZipCode: string;
-  LocationName: string;
-  Population: number;
-  VulnerabilityIndex: number;
+  zip_code: string;
+  location_name: string;
+  population: number;
+  vulnerability_index: number;
 };
 
 export type WeatherRecord = {
-  RecordID: number;
-  ZipCode: string;
-  TimeStamp: string;
-  Temperature: number;
-  Humidity: number;
-  AirQualityIndex: number;
+  record_id: number;
+  zip_code: string;
+  timestamp: string;         // ISO string from FastAPI
+  temperature: number;
+  humidity: number;
+  air_quality_index: number;
 };
+
