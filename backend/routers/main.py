@@ -3,8 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
-# 👇 import the shared database instance
-from utils.database import database
+from backend.utils.database import database 
 
 # Import routers
 from .locations_router import router as locations_router
@@ -13,20 +12,19 @@ from .queries_router import router as queries_router
 
 load_dotenv()
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Handles application startup (connect to DB) and shutdown (disconnect)."""
     try:
         await database.connect()
-        print("Database connected successfully.")
+        print("✅ Database connected successfully.")
     except Exception as e:
-        print(f"FATAL ERROR: Failed to connect to database during startup. {e}")
-
+        print(f"❌ FATAL ERROR: Failed to connect to database during startup. {e}")
+    
     yield
-
+    
     await database.disconnect()
-
+    print("Database disconnected.")
 
 app = FastAPI(
     title="AtmosCare API",
@@ -41,10 +39,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Register the routers
 app.include_router(locations_router, prefix="/api", tags=["Locations"])
 app.include_router(weather_router,   prefix="/api", tags=["Weather"])
 app.include_router(queries_router,   prefix="/api", tags=["Analysis"])
-
 
 @app.get("/")
 def read_root():
