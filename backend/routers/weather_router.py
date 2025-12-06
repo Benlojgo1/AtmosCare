@@ -1,11 +1,12 @@
 from typing import List
 from pydantic import BaseModel
 from datetime import datetime
-
-from utils.database import database
-from utils.api_fetcher import fetch_current_weather  
-from anyio import to_thread
+from fastapi import APIRouter, Query, HTTPException
 import os
+
+from backend.utils.database import database
+from backend.utils.api_fetcher import fetch_current_weather
+
 API_KEY = os.getenv("WEATHER_API_KEY")
 router = APIRouter()  # mounted in main.py with prefix="/api"
 
@@ -70,8 +71,14 @@ async def ingest_weather(body: WeatherIngest):
     zip_code = body.zip_code
 
     # 1) Fetch current conditions from external API
+    if not API_KEY:
+        raise HTTPException(status_code=500, detail="WEATHER_API_KEY not configured")
+
     try:
-        data = await fetch_current_weather(zip_code)
+        # fetch_current_weather is a sync function, but we're in an async route
+        # We need to use a thread pool to call the sync function
+        from anyio import to_thread
+        data = await to_thread.run_sync(fetch_current_weather, zip_code, API_KEY)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Failed to fetch from WeatherAPI: {e}")
 
@@ -98,57 +105,3 @@ async def ingest_weather(body: WeatherIngest):
         raise HTTPException(status_code=500, detail="Failed to insert weather record into database")
 
     return WeatherRecordRow(**dict(row))
-
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-
-from ..schemas import WeatherCreate, WeatherUpdate, WeatherRead 
-from ..crud import weather as weather_crud
-
-
-from ..db import get_db 
-
-router = APIRouter(prefix="/api/weather", tags=["weather"])
-
-
-@router.post("/", response_model=WeatherRead, status_code=status.HTTP_201_CREATED)
-def create_weather(payload: WeatherCreate, db: Session = Depends(get_db)):
-    try:
-        rec = weather_crud.create_weather_record(db, payload)
-    except Exception:
-        raise HTTPException(status_code=500, detail="Failed to create weather record")
-    return rec
-
-
-@router.get("/", response_model=List[WeatherRead])
-def list_weather(db: Session = Depends(get_db)):
-    return weather_crud.get_weather_records(db)
-
-
-@router.get("/{weather_id}", response_model=WeatherRead)
-def get_weather(weather_id: int, db: Session = Depends(get_db)):
-    rec = weather_crud.get_weather_by_id(db, weather_id)
-    if not rec:
-        raise HTTPException(status_code=404, detail="Weather record not found")
-    return rec
-
-
-@router.get("/by-location/{location_id}", response_model=List[WeatherRead])
-def get_weather_for_location(location_id: int, db: Session = Depends(get_db)):
-    return weather_crud.get_weather_by_location(db, location_id)
-
-
-@router.put("/{weather_id}", response_model=WeatherRead)
-def update_weather(weather_id: int, payload: WeatherUpdate, db: Session = Depends(get_db)):
-    rec = weather_crud.update_weather_record(db, weather_id, payload)
-    if not rec:
-        raise HTTPException(status_code=404, detail="Weather record not found")
-    return rec
-
-
-@router.delete("/{weather_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_weather(weather_id: int, db: Session = Depends(get_db)):
-    ok = weather_crud.delete_weather_record(db, weather_id)
-    if not ok:
-        raise HTTPException(status_code=404, detail="Weather record not found")
-    return None

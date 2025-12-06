@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       # Map the container port 5432 to the host port 5432 (or your custom port)
-      - "5432:6767"
+      - "5432:5432"
     volumes:
       # Volume 1: Persist the database data
       - postgres_data:/var/lib/postgresql/data
