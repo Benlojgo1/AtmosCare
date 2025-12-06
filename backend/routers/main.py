@@ -4,12 +4,12 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
 # 👇 import the shared database instance
-from utils.database import database
+from backend.utils.database import database
 
 # Import routers
-from .locations_router import router as locations_router
-from .weather_router import router as weather_router
-from .queries_router import router as queries_router
+from backend.routers.locations_router import router as locations_router
+from backend.routers.weather_router import router as weather_router
+from backend.routers.queries_router import router as queries_router
 
 load_dotenv()
 
@@ -36,7 +36,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
